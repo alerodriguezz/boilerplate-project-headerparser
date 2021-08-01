@@ -4,8 +4,10 @@
 // init project
 require('dotenv').config();
 var express = require('express');
+
 var app = express();
 
+var useragent = require('express-useragent');
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
 var cors = require('cors');
@@ -13,6 +15,9 @@ app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 20
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
+
+
+app.use(useragent.express())
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
@@ -31,7 +36,8 @@ app.get("/api/whoami", (req, res)=> {
  var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress
  //retrieve preffered language
  var lang =  req.headers["accept-language"] 
- res.json({"ipaddress": `${ip}`,"language":`${lang}`});
+ 
+ res.json({"ipaddress": `${ip}`,"language":`${lang}`,"software": req.useragent.source});
 });
 
 
